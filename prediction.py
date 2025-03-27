@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 import os
 import pickle
-
+import gzip
 
 ######################################
 ###     Data Loading & Cleanup     ###
@@ -132,14 +132,28 @@ def train_model(df):
     if not os.path.exists("models"):
         os.makedirs("models")
     # Save the trained Random Forest model, scaler, and encoders to a pickle file
-    with open("models/rf_model_predicted.pkl", "wb") as f:
+    
+
+    # with open("models/rf_model_predicted.pkl", "wb") as f:
+    #     pickle.dump({
+    #         "model": rf,
+    #         "feature_cols": features,
+    #         "encoders": encoders,
+    #         "scaler": scaler,
+    #         "rf_r2": r2_test
+    #     }, f)
+
+
+    with gzip.open("models/rf_model_predicted.pkl.gz", "wb") as f:
         pickle.dump({
             "model": rf,
             "feature_cols": features,
             "encoders": encoders,
             "scaler": scaler,
             "rf_r2": r2_test
-        }, f)
+        }, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+
     return rf, features, encoders, scaler, r2_test, fig
 
 
@@ -206,7 +220,7 @@ def precompute_predictions(_rf_model, feature_cols, _encoders, _scaler, df, top_
 #########################################
 
 def load_trained_model(model_path: str):
-    with open(model_path, "rb") as f:
+    with gzip.open(model_path, "rb") as f:
         data = pickle.load(f)
     return data["model"], data["feature_cols"], data["encoders"], data["scaler"], data["rf_r2"]
 
@@ -221,15 +235,14 @@ def prediction_page():
     # Load raw data
     df = load_data("data/bike_df_cleaned.csv")  # Adjust path as needed
 
-    model_file = "models/rf_model_predicted.pkl"
+    model_file = "models/rf_model_predicted.pkl.gz"
     if os.path.exists(model_file) and os.path.getsize(model_file) > 0:
         # Load the pre-trained model and objects from the pickle file, including rf_r2
         rf_model, feature_cols, encoders, scaler, rf_r2 = load_trained_model(model_file)
     else:
         st.error("Pre-trained model not found. Please run the training page to generate it.")
         return
-        # The train_model function already saves the model to the pickle file.
-
+        
     # Get top 10 busiest counters by total traffic
     top_10_counters = (
         df.groupby("Cntr_Name")["Hrly_Cnt"]
