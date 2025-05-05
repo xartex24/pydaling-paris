@@ -1,9 +1,11 @@
 streamlit
 pandas
 numpy
-scikit-learn
 matplotlib
 seaborn
-joblib
+scikit-learn
+plotly
+Pillow
+folium
+Jinja2
 gdown
-gzip 
