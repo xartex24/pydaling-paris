@@ -40,6 +40,6 @@ def get_data_paths():
 def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
     if not os.path.exists(local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        url = f"https://storage.googleapis.com/{bucket}/{os.path.basename(local_path)}"
+        url = f"https://storage.googleapis.com/{bucket}/{local_path}"
         urllib.request.urlretrieve(url, local_path)
     return local_path
