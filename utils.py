@@ -1,4 +1,5 @@
 import pandas as pd
+import os, urllib.request
 
 def format_dataframe(df):
     """
@@ -35,3 +36,10 @@ def get_data_paths():
         "raw_data": "data/bikes_paris.csv",
         "clean_data": "data/bike_df_cleaned.csv"
     }
+
+def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
+    if not os.path.exists(local_path):
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        url = f"https://storage.googleapis.com/{bucket}/{os.path.basename(local_path)}"
+        urllib.request.urlretrieve(url, local_path)
+    return local_path
