@@ -13,10 +13,20 @@ import os
 import pickle
 import gzip
 import gdown
+from utils import fetch_from_gcs
 
 ##########################################################
 # Google Drive file download and caching feature
 ##########################################################
+
+
+local_csv = fetch_from_gcs("data/bike_df_cleaned.csv")
+df = pd.read_csv(local_csv)
+
+local_model = fetch_from_gcs("models/rf_model_predicted.pkl.gz")
+with gzip.open(local_model,"rb") as f:
+    data = pickle.load(f)
+
 
 @st.cache_data(show_spinner=False)
 def download_model_from_drive(drive_url: str, dest_path: str) -> str:
