@@ -1,5 +1,6 @@
 import pandas as pd
 import os, urllib.request
+from google.cloud import storage
 
 def format_dataframe(df):
     """
@@ -45,11 +46,19 @@ def get_data_paths():
 #     return local_path
 
 
+# def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
+#     if not os.path.exists(local_path):
+#         os.makedirs(os.path.dirname(local_path), exist_ok=True)
+#         # Сглобяваме пълния път към обекта
+#         url = f"https://storage.googleapis.com/{bucket}/{local_path}"
+#         print(">>> FETCH URL:", url)         # <-- това ще видиш в Cloud Run логовете
+#         urllib.request.urlretrieve(url, local_path)
+#     return local_path
+
 def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
     if not os.path.exists(local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        # Сглобяваме пълния път към обекта
-        url = f"https://storage.googleapis.com/{bucket}/{local_path}"
-        print(">>> FETCH URL:", url)         # <-- това ще видиш в Cloud Run логовете
-        urllib.request.urlretrieve(url, local_path)
+        client = storage.Client()
+        blb = client.bucket(bucket).blob(local_path)
+        blb.download_to_filename(local_path)
     return local_path
