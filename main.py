@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import gzip
+import pickle
 from utils import fetch_from_gcs
 
 
