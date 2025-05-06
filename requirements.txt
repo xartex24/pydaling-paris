@@ -9,3 +9,4 @@ Pillow
 folium
 Jinja2
 gdown
+google-cloud-storage
