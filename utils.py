@@ -37,9 +37,19 @@ def get_data_paths():
         "clean_data": "data/bike_df_cleaned.csv"
     }
 
+# def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
+#     if not os.path.exists(local_path):
+#         os.makedirs(os.path.dirname(local_path), exist_ok=True)
+#         url = f"https://storage.googleapis.com/{bucket}/{local_path}"
+#         urllib.request.urlretrieve(url, local_path)
+#     return local_path
+
+
 def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
     if not os.path.exists(local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        # Сглобяваме пълния път към обекта
         url = f"https://storage.googleapis.com/{bucket}/{local_path}"
+        print(">>> FETCH URL:", url)         # <-- това ще видиш в Cloud Run логовете
         urllib.request.urlretrieve(url, local_path)
     return local_path
