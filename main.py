@@ -3,10 +3,13 @@ import pandas as pd
 import gzip
 import pickle
 from utils import fetch_from_gcs
+from data_exploration import load_bikes_paris
 
 
 local_csv = fetch_from_gcs("data/bike_df_cleaned.csv")
-df = pd.read_csv(local_csv)
+# df = pd.read_csv(local_csv)
+df = load_bikes_paris()
+st.session_state.bikes_paris = df
 
 local_model = fetch_from_gcs("models/rf_model_predicted.pkl.gz")
 with gzip.open(local_model,"rb") as f:
