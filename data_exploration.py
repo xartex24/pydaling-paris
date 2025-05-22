@@ -2,8 +2,30 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-
+import gdown
+import os
 from utils import format_dataframe
+
+
+
+@st.cache_data(show_spinner=False)
+def load_bikes_paris():
+    local_path = "data/bikes_paris.csv"
+    # if the file does not exist or is a pointer (small), download the real one
+    if (not os.path.exists(local_path)
+        or os.path.getsize(local_path) < 1000):
+        # Google Drive URL
+        file_id = "ВАШИЯ_FILE_ID"
+        url = f"https://drive.google.com/uc?id={"1PBhJTE_2SH-UOavUHgTVV5nwwb0sOm8m"}"
+        gdown.download(url, local_path, quiet=False)
+    # the real CSV:
+    return pd.read_csv(local_path, sep=";")
+
+# Page loading:
+def data_exploration_page():
+    df = load_bikes_paris()
+    st.write("Rows:", len(df), "Columns:", df.shape[1])
+    st.dataframe(df.head())
 
 
 # Load raw dataset if it is not already in session_state
