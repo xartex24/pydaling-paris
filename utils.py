@@ -1,6 +1,8 @@
 import pandas as pd
+import gdown
 import os, urllib.request
 from google.cloud import storage
+import streamlit as st
 
 def format_dataframe(df):
     """
@@ -31,12 +33,31 @@ def format_dataframe(df):
     
     return formatted_df
 
-# Define paths to datasets
-def get_data_paths():
-    return {
-        "raw_data": "data/bikes_paris.csv",
-        "clean_data": "data/bike_df_cleaned.csv"
-    }
+# # Define paths to datasets
+# def get_data_paths():
+#     return {
+#         "raw_data": "data/bikes_paris.csv",
+#         "clean_data": "data/bike_df_cleaned.csv"
+#     }
+
+@st.cache_data(show_spinner=False)
+def load_bikes_paris():
+    local_path = "data/bikes_paris.csv"
+    # if the file does not exist or is a pointer (small), download the real one
+    if (not os.path.exists(local_path)
+        or os.path.getsize(local_path) < 1000):
+        # Google Drive URL
+        file_id = "ВАШИЯ_FILE_ID"
+        url = f"https://drive.google.com/uc?id={"1PBhJTE_2SH-UOavUHgTVV5nwwb0sOm8m"}"
+        gdown.download(url, local_path, quiet=False)
+    # the real CSV:
+    return pd.read_csv(local_path, sep=";")
+
+# Page loading:
+def data_exploration_page():
+    df = load_bikes_paris()
+    st.write("Rows:", len(df), "Columns:", df.shape[1])
+    st.dataframe(df.head())
 
 # def fetch_from_gcs(local_path: str, bucket: str = "pydaling-assets") -> str:
 #     if not os.path.exists(local_path):
