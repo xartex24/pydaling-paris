@@ -10,7 +10,7 @@ from utils import format_dataframe
 
 # -@st.cache_data(show_spinner=False)
 # -def load_bikes_paris():
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=0)
 def load_bikes_paris():
     local_path = "data/bikes_paris.csv"
     # # if the file does not exist or is a pointer (small), download the real one
@@ -27,10 +27,6 @@ def load_bikes_paris():
     # # the real CSV:
     return pd.read_csv(local_path, sep=";")
 
-# # Page loading:
-def data_exploration_page():
-    df = load_bikes_paris()
-    st.session_state.bikes_paris = df
 # def data_exploration_page():
 #     df = load_bikes_paris()
 #     st.write("Rows:", len(df), "Columns:", df.shape[1])
@@ -43,16 +39,6 @@ def data_exploration_page():
     st.session_state.bikes_paris = df
 
     st.header("Data Exploration and Preprocessing")
-
-# Load raw dataset if it is not already in session_state
-if 'bikes_paris' not in st.session_state:
-    try:
-        st.session_state.bikes_paris = pd.read_csv("data/bikes_paris.csv")
-    except Exception as e:
-        st.error(f"Error loading raw dataset: {e}")
-
-
-def data_exploration_page():
 
     st.header("Data Exploration and Preprocessing")
 
