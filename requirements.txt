@@ -5,6 +5,7 @@ matplotlib
 seaborn
 scikit-learn
 plotly
+plotly-express
 Pillow
 folium
 Jinja2

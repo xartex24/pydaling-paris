@@ -40,8 +40,6 @@ def data_exploration_page():
 
     st.header("Data Exploration and Preprocessing")
 
-    st.header("Data Exploration and Preprocessing")
-
     st.markdown("""
         ### Transforming Raw Cycling Data into Analytical Insights
         
