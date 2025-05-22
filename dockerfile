@@ -7,29 +7,22 @@ RUN apt-get update \
     && git lfs install \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone your repository into /app and fetch all LFS objects
+# Clone your repo (pointer+LFS)
 RUN git clone https://github.com/xartex24/pydaling-paris.git /app \
     && cd /app \
     && git lfs pull
 
-# Set the working directory
+# Set working dir
 WORKDIR /app
 
-# Copy only the requirements file first (for caching)
-COPY requirements.txt .
-
-# Install Python dependencies
+# Install requirements
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Optionally remove the .git folder to shrink the image
+# (Опционално) изчистете .git за по-малък образ
 RUN rm -rf .git
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose port 8080 for Streamlit
+# Expose port and run
 ENV PORT 8080
 EXPOSE 8080
 
-# Launch the Streamlit app on container start
 CMD ["streamlit", "run", "main.py", "--server.port", "8080", "--server.address", "0.0.0.0"]
