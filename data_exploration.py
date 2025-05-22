@@ -28,6 +28,9 @@ def load_bikes_paris():
     return pd.read_csv(local_path, sep=";")
 
 # # Page loading:
+def data_exploration_page():
+    df = load_bikes_paris()
+    st.session_state.bikes_paris = df
 # def data_exploration_page():
 #     df = load_bikes_paris()
 #     st.write("Rows:", len(df), "Columns:", df.shape[1])
